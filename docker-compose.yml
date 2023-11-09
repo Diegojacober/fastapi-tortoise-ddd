@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./
+    command: sh dev.sh
+    volumes:
+      - .//:/app/
+    ports:
+      - 8001:8000
