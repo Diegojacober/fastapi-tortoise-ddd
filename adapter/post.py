@@ -24,5 +24,3 @@ class PostTortoiseAdapter(BaseModel):
         post = await self.get(post_id)
         post.status = PostStatus.PUBLISHED
         return await post.save()
-
-       

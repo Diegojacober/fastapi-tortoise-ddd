@@ -8,3 +8,19 @@ services:
       - .//:/app/
     ports:
       - 8001:8000
+    environment:
+      - DATABASE_URL=postgres://dev:12345678@db/api_posts
+
+  db:
+      image: postgres:alpine
+      volumes:
+        - postgres_db:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=dev
+        - POSTGRES_PASSWORD=12345678
+        - POSTGRES_DB=api_posts
+      ports:
+        - 8006:5432
+
+volumes:
+  postgres_db:
