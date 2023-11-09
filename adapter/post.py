@@ -7,8 +7,11 @@ DataT = TypeVar("DataT")
 class PostTortoiseAdapter(BaseModel):
 
     model: DataT
+    
+    async def listAll(self):
+        return await self.model.all()
 
-    async def list(self):
+    async def listPublisheds(self):
         return await self.model.filter(status = PostStatus.PUBLISHED)
 
     async def create(self, post: Post):

@@ -6,8 +6,11 @@ class PostService(BaseModel):
 
     adapter: PostTortoiseAdapter
 
-    async def list(self):
-        return await self.adapter.list()
+    async def listAll(self):
+        return await self.adapter.listAll()
+
+    async def listPublished(self):
+        return await self.adapter.listPublisheds()
 
     async def create(self, post: Post):
         return await self.adapter.create(post)

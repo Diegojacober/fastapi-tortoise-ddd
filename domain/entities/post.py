@@ -1,14 +1,7 @@
 from pydantic import Field
-from enum import Enum
-from pydantic import BaseModel
 
-class PostStatus(str, Enum):
-    PUBLISHED = "published"
-    DRAFT = "draft"
-
-class PostDto(BaseModel):
-    title: str
-    content: str
+from .dto.postDto import PostDto
+from .enums.post_status import PostStatus
 
 class Post(PostDto):
     status: PostStatus = Field(default=PostStatus.DRAFT)

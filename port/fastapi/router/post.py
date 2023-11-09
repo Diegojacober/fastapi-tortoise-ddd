@@ -8,11 +8,16 @@ router = APIRouter(
     prefix="/posts",
     tags=["posts"],
     responses={404: {"description": "Not found"}},
+
 )
+
+@router.get("/publisheds",)
+async def list_posts_published(service: PostService = Depends(post_factory)):
+    return await service.listPublished()
 
 @router.get("/",)
 async def list_posts(service: PostService = Depends(post_factory)):
-    return await service.list()
+    return await service.listAll()
 
 @router.post("/",)
 async def create_post(body: PostDto, service: PostService = Depends(post_factory)):
