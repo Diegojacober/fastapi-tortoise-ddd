@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
-class RegisterUserDTO(BaseModel):
+class UserDTO(BaseModel):
+    id: Optional[int] = None
     first_name: str
     last_name: str
     password: str
