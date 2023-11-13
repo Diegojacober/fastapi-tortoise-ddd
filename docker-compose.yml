@@ -9,7 +9,11 @@ services:
     ports:
       - 8001:8000
     environment:
-      - DATABASE_URL=postgres://dev:12345678@db/api_posts
+      - DB_PORT=5432
+      - DB_NAME=api_posts
+      - DB_USER=dev
+      - DB_PASS=12345678
+      - DB_HOST=db
 
   db:
       image: postgres:alpine

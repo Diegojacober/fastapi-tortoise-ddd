@@ -10,13 +10,19 @@ def configure_routers(application: FastAPI):
     application.include_router(post_router.router)
 
 def configure_tortoise(application: FastAPI):
+    __HOST = os.getenv('DB_HOST')
+    __USER = os.getenv('DB_USER')
+    __PASS = os.getenv('DB_PASS')
+    __DATABASE = os.getenv('DB_NAME')
+    __PORT = os.getenv('DB_PORT')
     register_tortoise(
         application,
         generate_schemas=True,
-        db_url=os.environ.get("DATABASE_URL"),
+        db_url=f"postgres://{__USER}:{__PASS}@{__HOST}:{__PORT}/{__DATABASE}",
         modules={
             "models": [
-                "adapter.schemas.post"
+                "adapter.models.post",
+                "adapter.models.user",
             ],
         }
     )

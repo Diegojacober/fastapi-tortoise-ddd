@@ -1,5 +1,5 @@
 from adapter.post import PostTortoiseAdapter
-from adapter.schemas.post import PostModel
+from adapter.models.post import PostModel
 from domain.service.post import PostService
 
 
