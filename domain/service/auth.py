@@ -12,7 +12,9 @@ from port.factory.user import user_factory
 from ..entities.dto.token.tokenDataDto import TokenData
 from ..entities.dto.user.userDto import User
 from domain.service.user import UserService
-
+from passlib.exc import UnknownHashError
+from domain.entities.dto.user.registerDto import RegisterUserDTO
+from domain.entities.dto.user.userDto import User
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -31,12 +33,21 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def authenticate_user(username: str, password: str, service: UserService = Depends(user_factory)):
-    user = service.getPerEmail(email=username)
+async def authenticate_user(username: str, password: str, service: UserService = user_factory()):
+    user = await service.getPerEmail(email=username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
-        return False
+    try:
+        if not verify_password(password, user.password):
+            return False
+    except UnknownHashError as E:
+        credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid JWT format",
+        headers={"WWW-Authenticate": "Bearer"},
+        )
+        raise credentials_exception
+
     return user
 
 
@@ -51,7 +62,13 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], service: UserService = Depends(user_factory)):
+async def create_user(new_user: RegisterUserDTO, service: UserService = user_factory()):
+    new_user.password = get_password_hash(new_user.password)
+    user  = await service.create(new_user);
+
+    return User(email=user.email, first_name=user.first_name, last_name=user.last_name, active=user.active, username=user.email)
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], service: UserService = user_factory()):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -65,7 +82,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], servic
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = service.getPerEmail(email=username)
+    user = await service.getPerEmail(email=username)
     if user is None:
         raise credentials_exception
     return user
@@ -74,6 +91,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], servic
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)]
 ):
-    if current_user.disabled:
+    if not current_user.active:
         raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
+    return User(email=current_user.email, first_name=current_user.first_name, last_name=current_user.last_name, active=current_user.active, username=current_user.email)
