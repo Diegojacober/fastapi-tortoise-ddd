@@ -1,0 +1,3 @@
+INSERT INTO public.users(
+	 id, first_name, last_name, email, password)
+	VALUES ('1f4cb72f-8b58-4a48-bbb8-443f7add7ed8', 'John', 'Doe', 'johndoe@example.com', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW');
