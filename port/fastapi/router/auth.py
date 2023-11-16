@@ -40,13 +40,11 @@ async def login_for_access_token(
 async def register_user(req: RegisterUserDTO):
     return await create_user(req)
 
-@router.get("/users/me/", response_model=User)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
-    return current_user
+@router.get("/me/", response_model=User)
+async def read_users_me(user: User = Depends(get_current_active_user)):
+    return user
 
 
-@router.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
+@router.get("/me/items/")
+async def read_own_items(current_user: User = Depends(get_current_active_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
