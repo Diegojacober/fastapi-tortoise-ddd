@@ -14,3 +14,6 @@ class UserService(BaseModel):
 
     async def get(self, user_id: int):
         return await self.adapter.get(user_id)
+    
+    async def getPerEmail(self, email: str):
+        return await self.adapter.getPerEmail(email=email)

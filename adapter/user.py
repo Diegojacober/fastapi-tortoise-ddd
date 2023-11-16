@@ -16,3 +16,6 @@ class UserTortoiseAdapter(BaseModel):
 
     async def get(self, user_id: int):
         return await self.model.get(id=user_id)
+    
+    async def getPerEmail(self, email: str):
+        return await self.model.get(email=email)

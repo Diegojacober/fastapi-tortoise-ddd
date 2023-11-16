@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from port.fastapi.router import post as post_router
-from port.fastapi.router import user as user_router
+from port.fastapi.router import auth as auth_router
 from tortoise.contrib.fastapi import register_tortoise
 from dotenv import load_dotenv
 
@@ -9,7 +9,7 @@ load_dotenv()
 
 def configure_routers(application: FastAPI):
     application.include_router(post_router.router)
-    application.include_router(user_router.router)
+    application.include_router(auth_router.router)
 
 def configure_tortoise(application: FastAPI):
     __HOST = os.getenv('DB_HOST')

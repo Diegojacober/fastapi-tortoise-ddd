@@ -8,6 +8,7 @@ class UserModel(Model):
     last_name = fields.CharField(max_length=255, null=True)
     email = fields.CharField(max_length=255, unique=True, index=True, null=False)
     password = fields.CharField(max_length=255, null=False)
+    active = fields.BooleanField(default=True)
     
     class Meta:
         table="users"
